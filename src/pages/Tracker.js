@@ -132,7 +132,6 @@ const Tracker = () => {
         >
           {item.entry.map((e) => (
               <ItemCard name={e.name} calories={e.calories} date={e.date} key={e._id} calorieExcess={item.totalCalories>200}></ItemCard>
-
           ))} 
         </Grid>
         </div>

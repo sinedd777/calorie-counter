@@ -4,7 +4,7 @@ import Tracker from './Tracker';
 import { Grid } from '@mui/material'
 
 const Home = () => {
-    return (  
+    return (
         <Grid
         container
         direction="column"

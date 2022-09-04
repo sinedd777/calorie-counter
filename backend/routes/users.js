@@ -1,7 +1,7 @@
 const router = require('express').Router();
 let User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcryptjs')
 
 router.route('/').get((req, res) => {
   User.find()
@@ -9,31 +9,42 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/add').post((req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
 
-  // const oldUser = await User.findOne({ username });
-  // if (oldUser) {
-  //   return res.status(409).send("User Already Exist. Please Login");
-  // }
+router.route('/login').post( async (req, res) => {
+  const user = await User.findOne({
+		username: req.body.username,
+	})
 
-  // encryptedPassword = await bcrypt.hash(password, 10);
+	if (!user) {
+		return { status: 'error', error: 'Invalid login' }
+	}
 
-  // const token = jwt.sign(
-  //   { user_id: user._id, email },
-  //   process.env.TOKEN_KEY,
-  //   {
-  //     expiresIn: "2h",
-  //   }
-  // );
-  // // save user token
-  // user.token = token;
-  // const newUser = new User({username,encryptedPassword});
+	const isPasswordValid = await bcrypt.compare(
+		req.body.password,
+		user.password
+	)
 
-  newUser.save()
-    .then(() => res.json('User added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
+	if (isPasswordValid) {
+		const token = jwt.sign( user.username, 'secret123')
+
+		return res.json({ status: 'ok', user: token })
+	} else {
+		return res.json({ status: 'error', user: false })
+	}
 });
+
+router.route('/register').post( async (req, res) => {
+  console.log(req.body)
+	try {
+		const newPassword = await bcrypt.hash(req.body.password, 10)
+		await User.create({
+			username: req.body.username,
+			password: newPassword
+		})
+		res.json({ status: 'ok' })
+	} catch (err) {
+		res.json({ status: 'error', error: 'Duplicate Username' })
+	}
+})
 
 module.exports = router;
