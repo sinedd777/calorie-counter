@@ -1,7 +1,24 @@
 const router = require('express').Router();
 let Food = require('../models/food.model');
 const jwt = require('jsonwebtoken');
+let User = require('../models/user.model');
 
+
+router.route('/all').get( async (req, res) => {
+  const token = req.headers['x-access-token']
+  const username = jwt.verify(token, 'secret123')
+
+  const user = await User.findOne({
+    username: username,
+  })
+  if(user.role !== 'admin'){
+    res.json({ status: 'error', error: 'Not Admin' })
+  }else{
+    Food.find()
+    .then(foods => res.json(foods))
+    .catch(err => res.status(400).json('Error: ' + err));
+  }
+});
 
 router.route('/').get((req, res) => {
   const token = req.headers['x-access-token']
@@ -41,6 +58,45 @@ router.route('/add').post((req, res) => {
   newFood.save()
   .then(() => res.json('Food added!'))
   .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/delete').post( async (req, res) => {
+  const token = req.headers['x-access-token']
+  const username = jwt.verify(token, 'secret123')
+  const id = req.body.id;
+  const user = await User.findOne({
+    username: username,
+  })
+
+  if(user.role !== 'admin'){
+    res.json({ status: 'error', error: 'Not Admin' })
+  }else{
+    Food.deleteOne({ _id: id })
+        .then(foods => res.json(foods))
+        .catch(err => res.status(400).json('Error: ' + err));
+  }
+});
+
+router.route('/update').post( async (req, res) => {
+  const token = req.headers['x-access-token']
+  const username = jwt.verify(token, 'secret123')
+  const user = await User.findOne({
+    username: username,
+  })
+
+  const id = req.body.id;
+  const name = req.body.name;
+  const calories = req.body.calories;
+  const date = req.body.date;
+
+
+  if(user.role !== 'admin'){
+    res.json({ status: 'error', error: 'Not Admin' })
+  }else{
+    Food.updateOne({ _id: id },  { $set : { name: name, calories: calories, date: date }} )
+        .then(foods => res.json(foods))
+        .catch(err => res.status(400).json('Error: ' + err));
+  }
 });
 
 // router.route('/:id').get((req, res) => {

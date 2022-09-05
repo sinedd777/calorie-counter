@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import DefaultUser from './pages/DefaultUser'
+import AdminPage from './pages/AdminPage'
 
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
         <Route path="/login" element={< Login />} />
         <Route path="/register"  element={< Register />} />
         <Route path="/dashboard/*"  element={< DefaultUser />} />
+        <Route path="/admin"  element={< AdminPage />} />
     </Routes>
 	)
 }

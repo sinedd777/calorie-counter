@@ -35,7 +35,6 @@ const Form = () => {
     }
 
     const submit = () => {
-        console.log(name, calories,date);
         addFood(name, calories, date);
         setOpen(true);
         resetValues();
@@ -55,7 +54,7 @@ const Form = () => {
     }} position="relative" p="20px">
     
     <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+        <Alert variant="filled"  onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           Entry Added! 
         </Alert>
       </Snackbar>

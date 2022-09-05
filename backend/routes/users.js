@@ -3,11 +3,28 @@ let User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
 
-router.route('/').get((req, res) => {
-  User.find()
-    .then(users => res.json(users))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
+router.route('/').get( async (req, res) => {
+	
+	try {
+		const token = req.headers['x-access-token']
+		const username = jwt.verify(token, 'secret123')
+
+		const user = await User.findOne({
+			username: username,
+		})
+
+		if(user.role !== 'admin'){
+			res.json({ status: 'error', error: 'Not Admin' })
+		}else{
+			User.find({}, { username:1, calorieLimit:1, role: 1})
+			.then(users => res.json(users))
+			.catch(err => res.status(400).json('Error: ' + err));
+		}
+	}
+	catch (err) {
+		res.json({ status: 'error', error: 'No token' })
+	}
+})
 
 router.route('/login').post( async (req, res) => {
   const user = await User.findOne({
@@ -51,6 +68,53 @@ router.route('/register').post( async (req, res) => {
 		res.json({ status: 'ok' })
 	} catch (err) {
 		res.json({ status: 'error', error: 'Duplicate Username' })
+	}
+})
+
+router.route('/delete').post( async (req, res) => {
+	try {
+		const token = req.headers['x-access-token']
+		const username = jwt.verify(token, 'secret123')
+		const targetUsername = req.body.username;
+
+		const user = await User.findOne({
+			username: username,
+		})
+
+		if(user.role !== 'admin'){
+			res.json({ status: 'error', error: 'Not Admin' })
+		}else{
+			User.deleteOne({ username: targetUsername })
+			.then(users => res.json('User Removed!'))
+			.catch(err => res.status(400).json('Error: ' + err));
+		}
+	}
+	catch (err) {
+		res.json({ status: 'error', error: 'No token' })
+	}
+})
+
+router.route('/update').post( async (req, res) => {
+	try {
+		const token = req.headers['x-access-token']
+		const username = jwt.verify(token, 'secret123')
+		const targetUsername = req.body.username;
+		const calorieLimit = req.body.calorieLimit;
+
+		const user = await User.findOne({
+			username: username,
+		})
+
+		if(user.role !== 'admin'){
+			res.json({ status: 'error', error: 'Not Admin' })
+		}else{
+			User.updateOne({ username: targetUsername}, { $set : { calorieLimit: calorieLimit }})
+			.then(() => res.json('User Updated'))
+			.catch(err => res.status(400).json('Error: ' + err));
+		}
+	}
+	catch (err) {
+		res.json({ status: 'error', error: 'No token' })
 	}
 })
 

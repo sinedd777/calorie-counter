@@ -30,7 +30,7 @@ const Login = () => {
 				navigate('/dashboard');
 			}else if( data.role === 'admin'){
 				alert('Welcome Admin')
-				navigate('/register');
+				navigate('/admin');
 			}
 			
 		} else {
