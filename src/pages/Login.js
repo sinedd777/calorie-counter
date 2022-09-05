@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-function App() {
+const Login = () => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
     const navigate = useNavigate();
@@ -25,8 +25,14 @@ function App() {
 
 		if (data.user) {
 			localStorage.setItem('token', data.user)
-			alert('Login successful')
-			navigate('/dashboard');
+			if(data.role === 'user'){
+				alert('Login successful')
+				navigate('/dashboard');
+			}else if( data.role === 'admin'){
+				alert('Welcome Admin')
+				navigate('/register');
+			}
+			
 		} else {
 			alert('Please check your username and password')
 		}
@@ -56,4 +62,4 @@ function App() {
 	)
 }
 
-export default App
+export default Login;

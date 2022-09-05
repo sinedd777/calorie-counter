@@ -1,5 +1,5 @@
 import {React, useState, useEffect} from 'react'
-import { getAllItems } from '../services/Apis'
+import { getAllItems, getCalorieLimit } from '../services/Apis'
 import ItemCard from '../components/ItemCard'
 import { FormControl, TextField  } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -17,6 +17,7 @@ const Tracker = () => {
   const [listByDate, setListByDate] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [list, setList] = useState([]);
+  const [calorieLimit, setCalorieLimit] = useState(0)
  
   const calculateCalories = (list) => {
     list.forEach((item) => {
@@ -30,7 +31,7 @@ const Tracker = () => {
 
   const formatList = (list) => {
     list.sort(function(a,b){
-      return new Date(a.date) - new Date(b.date);
+      return new Date(b.date) - new Date(a.date);
     });
 
     const groups = list.reduce((groups, entry) => {
@@ -58,7 +59,13 @@ const Tracker = () => {
       formatList(list);
       setList([...list]);
     }
+    const fetchCalorieLimit = async () => {
+      const calorieLimit = await getCalorieLimit();
+      setCalorieLimit(calorieLimit);
+    }
+
     fetchData();
+    fetchCalorieLimit();
     setLoading(false);
   },[isLoading])
 
@@ -123,7 +130,7 @@ const Tracker = () => {
    
       {!isLoading&&listByDate?.map((item,index) => (
         <div key={index}>
-        <Typography variant="h6" sx={{marginLeft:10}}>{item.date}</Typography>
+        <Typography variant="h6" sx={{marginLeft:10}}>{moment(item.date).format('DD-MM-YYYY')}</Typography>
         <Grid
           container
           direction="row"
@@ -131,7 +138,7 @@ const Tracker = () => {
           alignItems="left"
         >
           {item.entry.map((e) => (
-              <ItemCard name={e.name} calories={e.calories} date={e.date} key={e._id} calorieExcess={item.totalCalories>200}></ItemCard>
+              <ItemCard name={e.name} calories={e.calories} date={e.date} key={e._id} calorieExcess={item.totalCalories>calorieLimit}></ItemCard>
           ))} 
         </Grid>
         </div>

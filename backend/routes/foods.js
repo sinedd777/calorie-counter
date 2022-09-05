@@ -1,12 +1,15 @@
 const router = require('express').Router();
 let Food = require('../models/food.model');
+const jwt = require('jsonwebtoken');
+
 
 router.route('/').get((req, res) => {
-    const username = req.query.username;
+  const token = req.headers['x-access-token']
+  const username = jwt.verify(token, 'secret123')
 
-    Food.find({ username: username })
-        .then(foods => res.json(foods))
-        .catch(err => res.status(400).json('Error: ' + err));
+  Food.find({ username: username })
+      .then(foods => res.json(foods))
+      .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/daily').get((req, res) => {
@@ -21,7 +24,9 @@ router.route('/daily').get((req, res) => {
 
 
 router.route('/add').post((req, res) => {
-  const username = req.body.username;
+  const token = req.headers['x-access-token']
+  const username = jwt.verify(token, 'secret123')
+  
   const name = req.body.name;
   const calories = Number(req.body.calories);
   const date = req.body.date;

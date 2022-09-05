@@ -12,7 +12,7 @@ import moment from 'moment';
 
 
 const Form = () => {
-    const [date, setDate] = useState([]);
+    const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
     const [name, setName] = useState('')
     const [calories, setCalories] = useState('')
     const [open, setOpen] = useState(false);
@@ -35,6 +35,7 @@ const Form = () => {
     }
 
     const submit = () => {
+        console.log(name, calories,date);
         addFood(name, calories, date);
         setOpen(true);
         resetValues();

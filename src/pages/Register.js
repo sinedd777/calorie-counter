@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import React from 'react'
 
-function App() {
+const Register = () => {
     const navigate = useNavigate();
 
 	const [username, setUsername] = useState('')
@@ -52,4 +53,4 @@ function App() {
 	)
 }
 
-export default App
+export default Register;
