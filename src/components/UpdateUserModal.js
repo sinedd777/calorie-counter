@@ -1,11 +1,12 @@
 import {React, useState } from 'react'
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import Modal from '@mui/material/Modal';
-import { Stack } from '@mui/system';
-import { Button, TextField, Box } from '@mui/material';
-import { updateUser } from '../services/Apis';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { Stack } from '@mui/system';
+import { FormControl, Button, TextField, Box } from '@mui/material';
+import { updateUser } from '../services/Apis';
+
 
 const style = {
     position: 'absolute',
@@ -48,10 +49,13 @@ const UpdateUserModal = ( {reload, user} ) => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description">
                 <Box sx={style}>
+                <FormControl>
+
                     <Stack  spacing={3}>
                         <TextField required id="calories" label="Calories" variant="standard" onChange={ (e) => setUpdatedCalories(e.target.value)} type="number" />
                         <Button onClick={ () => updateCalories(user.username, updatedCalories)} variant="contained" color="success"> Submit </Button>
                     </Stack>
+                    </FormControl>
                 </Box>
                             
             </Modal>

@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import React from 'react'
+import { Button, FormControl, TextField, Stack, Typography } from '@mui/material';
+
 
 const Register = () => {
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
@@ -26,29 +28,43 @@ const Register = () => {
 
 		if (data.status === 'ok') {
 			navigate('/login')
+		}else if(data.status === 'error'){
+			alert('User already exists')
 		}
+	}
+
+	const handleUsername = (e) => {
+		setUsername((e.trim()).replace(/[^a-zA-Z0-9 ]/g, ""))
 	}
 
 	return (
 		<div>
-			<h1>Register</h1>
-			<form onSubmit={registerUser}>
-				<input
-					value={username}
-					onChange={(e) => setUsername(e.target.value)}
-					type="text"
-					placeholder="Username"
-				/>
-				<br />
-				<input
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-					type="password"
-					placeholder="Password"
-				/>
-				<br />
-				<input type="submit" value="Register" />
-			</form>
+			<Stack
+				direction="column"
+				justifyContent="center"
+				alignItems="center"
+				spacing={2}
+				mt={20}
+			>
+				<Typography variant='h3'>Register</Typography>
+				<FormControl >
+					<TextField
+						value={username}
+						onChange={(e) => handleUsername(e.target.value)}
+						type="text"
+						placeholder="Username"
+					/>
+					<br />
+					<TextField
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						type="password"
+						placeholder="Password"
+					/>
+					<br />
+					<Button type="submit" variant="contained" onClick={registerUser} value="Register" disabled={!(username && password)}> Register </Button>
+				</FormControl>
+			</Stack>
 		</div>
 	)
 }
