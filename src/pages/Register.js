@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import React from 'react'
-import { Button, FormControl, TextField, Stack, Typography } from '@mui/material';
+import { Button, FormControl, TextField, Stack, Typography, Box } from '@mui/material';
 
 
 const Register = () => {
@@ -46,7 +46,16 @@ const Register = () => {
 				spacing={2}
 				mt={20}
 			>
-				<Typography variant='h3'>Register</Typography>
+				<Box sx={{
+					m: 8,
+					p: 8,
+					boxShadow: 4, "&:hover": {
+						boxShadow: 8,
+					  },
+					  
+					
+				}}>
+				<Typography variant='h3' align="center" mb={2} >Register</Typography>
 				<FormControl >
 					<TextField
 						value={username}
@@ -64,6 +73,7 @@ const Register = () => {
 					<br />
 					<Button type="submit" variant="contained" onClick={registerUser} value="Register" disabled={!(username && password)}> Register </Button>
 				</FormControl>
+				</Box>
 			</Stack>
 		</div>
 	)
