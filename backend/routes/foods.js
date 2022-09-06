@@ -4,46 +4,86 @@ const jwt = require('jsonwebtoken');
 let User = require('../models/user.model');
 
 
-router.route('/all').get( async (req, res) => {
+router.route('/all').get(async (req, res) => {
   const token = req.headers['x-access-token']
   const username = jwt.verify(token, 'secret123')
 
   const user = await User.findOne({
     username: username,
   })
-  if(user.role !== 'admin'){
+  if (user.role !== 'admin') {
     res.json({ status: 'error', error: 'Not Admin' })
-  }else{
+  } else {
     Food.find()
-    .then(foods => res.json(foods))
-    .catch(err => res.status(400).json('Error: ' + err));
+      .then(foods => res.json(foods))
+      .catch(err => res.status(400).json('Error: ' + err));
   }
 });
+
 
 router.route('/').get((req, res) => {
   const token = req.headers['x-access-token']
   const username = jwt.verify(token, 'secret123')
 
   Food.find({ username: username })
+    .then(foods => res.json(foods))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/stats').get(async (req, res) => {
+  const token = req.headers['x-access-token']
+  const username = jwt.verify(token, 'secret123')
+
+  const multiplier = req.query.multiplier;
+
+  const user = await User.findOne({
+    username: username,
+  })
+  if (user.role !== 'admin') {
+    res.json({ status: 'error', error: 'Not Admin' })
+  } else {
+    Food.count({ date: { $gte: new Date(Date.now() - multiplier * 604800000), $lt: new Date(Date.now() - ((multiplier === '0' ? 1 : multiplier) - 1) * 604800000) } })
       .then(foods => res.json(foods))
       .catch(err => res.status(400).json('Error: ' + err));
+  }
 });
 
-router.route('/daily').get((req, res) => {
-    const username = req.query.username;
-    const startDate = new Date(req.query.startDate);
-    const endDate = new Date(req.query.endDate)
+router.route('/weekly').get(async (req, res) => {
+  const token = req.headers['x-access-token']
+  const username = jwt.verify(token, 'secret123')
 
-    Food.find({ username: username , date : { $gte: new Date(startDate),  $lt: new Date(endDate)} })
-        .then(foods => res.json(foods))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
+  const user = await User.findOne({
+    username: username,
+  })
 
+  if (user.role !== 'admin') {
+    res.json({ status: 'error', error: 'Not Admin' })
+  } else {
+    Food.aggregate(
+      [{
+        $match: {
+          date: {
+            $gte: new Date(Date.now() - 604800000),
+            $lt: new Date(Date.now())
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$username",
+          calories: { $sum: "$calories" }
+        }
+      }]
+    )
+      .then(foods => res.json(foods))
+      .catch(err => res.status(400).json('Error: ' + err));
+  }
+})
 
 router.route('/add').post((req, res) => {
   const token = req.headers['x-access-token']
   const username = jwt.verify(token, 'secret123')
-  
+
   const name = req.body.name;
   const calories = Number(req.body.calories);
   const date = req.body.date;
@@ -56,11 +96,11 @@ router.route('/add').post((req, res) => {
   });
 
   newFood.save()
-  .then(() => res.json('Food added!'))
-  .catch(err => res.status(400).json('Error: ' + err));
+    .then(() => res.json('Food added!'))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/delete').post( async (req, res) => {
+router.route('/delete').post(async (req, res) => {
   const token = req.headers['x-access-token']
   const username = jwt.verify(token, 'secret123')
   const id = req.body.id;
@@ -68,16 +108,16 @@ router.route('/delete').post( async (req, res) => {
     username: username,
   })
 
-  if(user.role !== 'admin'){
+  if (user.role !== 'admin') {
     res.json({ status: 'error', error: 'Not Admin' })
-  }else{
+  } else {
     Food.deleteOne({ _id: id })
-        .then(foods => res.json(foods))
-        .catch(err => res.status(400).json('Error: ' + err));
+      .then(foods => res.json(foods))
+      .catch(err => res.status(400).json('Error: ' + err));
   }
 });
 
-router.route('/update').post( async (req, res) => {
+router.route('/update').post(async (req, res) => {
   const token = req.headers['x-access-token']
   const username = jwt.verify(token, 'secret123')
   const user = await User.findOne({
@@ -90,12 +130,12 @@ router.route('/update').post( async (req, res) => {
   const date = req.body.date;
 
 
-  if(user.role !== 'admin'){
+  if (user.role !== 'admin') {
     res.json({ status: 'error', error: 'Not Admin' })
-  }else{
-    Food.updateOne({ _id: id },  { $set : { name: name, calories: calories, date: date }} )
-        .then(foods => res.json(foods))
-        .catch(err => res.status(400).json('Error: ' + err));
+  } else {
+    Food.updateOne({ _id: id }, { $set: { name: name, calories: calories, date: date } })
+      .then(foods => res.json(foods))
+      .catch(err => res.status(400).json('Error: ' + err));
   }
 });
 

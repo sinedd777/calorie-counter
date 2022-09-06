@@ -16,6 +16,7 @@ import FastfoodIcon from '@mui/icons-material/Fastfood';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AdminUserDetails from '../components/AdminUserDetails';
 import AdminFoodDetails from '../components/AdminFoodDetails';
+import AdminStatsDetails from '../components/AdminStatsDetails';
 
 
 const drawerWidth = 240;
@@ -46,7 +47,7 @@ export default function ClippedDrawer() {
         <Box sx={{ overflow: 'auto' }}>
           <List>
             {['Users', 'Food Entries', 'Reports'].map((text, index) => (
-              <ListItem key={text} disablePadding onClick={ () => setScreen(text)}>
+              <ListItem key={text} disablePadding onClick={() => setScreen(text)}>
                 <ListItemButton >
                   <ListItemIcon >
                     {index === 0 ? <PeopleIcon /> : ''}
@@ -63,9 +64,9 @@ export default function ClippedDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        {screen === 'Users' && <AdminUserDetails/>}
-        {screen === 'Food Entries' && <AdminFoodDetails/>}
-        {screen === 'Reports' && <AdminUserDetails/>}
+        {screen === 'Users' && <AdminUserDetails />}
+        {screen === 'Food Entries' && <AdminFoodDetails />}
+        {screen === 'Reports' && <AdminStatsDetails />}
       </Box>
     </Box>
   );
