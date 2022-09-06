@@ -3,6 +3,26 @@ let User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
 
+router.route('/authorised').get( async (req, res) => {
+	try {
+		const token = req.headers['x-access-token']
+		const username = jwt.verify(token, 'secret123')
+
+		const user = await User.findOne({
+			username: username,
+		})
+
+		if(user.role !== 'admin'){
+			res.json({ status: 'error', error: 'Not Admin' })
+		}else{
+			res.json(true)
+		}
+	}
+	catch (err) {
+		res.json({ status: 'error', error: 'No token' })
+	}
+})
+
 router.route('/').get( async (req, res) => {
 	
 	try {

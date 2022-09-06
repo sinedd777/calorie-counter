@@ -9,6 +9,9 @@ const Home = () => {
         container
         direction="column"
         justifyContent="center"
+        sx={{
+            // background:'#af52bf'
+        }}
         >            
             <Form/>
             <Tracker/>

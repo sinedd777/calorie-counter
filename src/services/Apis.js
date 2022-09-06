@@ -128,3 +128,13 @@ export const updateUser = async (username, calorieLimit) => {
     });
     return response.json();
 }
+
+export const isAuthorised = async (username, calorieLimit) => {
+    const response = await fetch('http://localhost:5000/users/authorised', {
+        method: 'GET',
+        headers: {
+            'x-access-token': localStorage.getItem('token'),
+        }
+    });
+    return response.json();
+}

@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -17,14 +17,43 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import AdminUserDetails from '../components/AdminUserDetails';
 import AdminFoodDetails from '../components/AdminFoodDetails';
 import AdminStatsDetails from '../components/AdminStatsDetails';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
+import { isAuthorised } from '../services/Apis';
 
 
 const drawerWidth = 240;
 
 export default function ClippedDrawer() {
+  const navigate = useNavigate();
 
   const [screen, setScreen] = useState('Users');
+  const [auth, setAuth] = useState(true);
 
+  const logout= () => {
+    localStorage.clear();
+    alert('Logging Out')
+    navigate('/login')
+  }
+
+  const checkAdmin = async () => {
+    const response = await isAuthorised();
+    setAuth(response);
+  }
+
+  useEffect(() => {
+    if(auth === true) return;
+    if(auth !== true) {
+      alert('Not Authorised')
+      logout()
+    }
+  }, [auth])
+
+  useEffect(() => {
+    checkAdmin();
+  }, [])
+  
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -60,13 +89,23 @@ export default function ClippedDrawer() {
             ))}
           </List>
           <Divider />
+          <List>
+              <ListItem disablePadding onClick={logout}>
+                <ListItemButton >
+                <ListItemIcon >
+                  <LogoutIcon/>
+                  </ListItemIcon>
+                  <ListItemText primary='Logout' />
+                </ListItemButton>
+              </ListItem>
+          </List>
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         {screen === 'Users' && <AdminUserDetails />}
         {screen === 'Food Entries' && <AdminFoodDetails />}
-        {screen === 'Reports' && <AdminStatsDetails />}
+        {screen === 'Reports' && <AdminStatsDetails />}        
       </Box>
     </Box>
   );
