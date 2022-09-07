@@ -48,7 +48,7 @@ const AdminStatsDetails = () => {
                 }}>
                     <Typography variant='h2' sx={{
                         textShadow: "2px 3px #CDDC39, -3px -5px #E64A19"
-                    }}>{weeklyCount} new Entries in the current week! <TrendingUpIcon sx={{
+                    }}>{weeklyCount} new Entries in the selected week! <TrendingUpIcon sx={{
                         textShadow: "2px 3px #CDDC39, -3px -5px #E64A19", fontSize: 60
                     }} /> </Typography>
                     <Typography variant='h7'>Calculated from {moment().subtract((counter)*+7, 'days').format("DD-MM-YYYY")} to {moment().subtract((counter-1)*+7,'days').format("DD-MM-YYYY")}</Typography>

@@ -12,7 +12,6 @@ const DefaultUser = () => {
         <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/tracker" element={<Tracker />} />
           </Routes>
         <Footer />
     </Box>  
