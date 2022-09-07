@@ -6,10 +6,9 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import Stack from '@mui/material/Stack';
-import { Button, Grid, Typography, Divider } from '@mui/material'
+import { Button, Grid, Typography, Tooltip } from '@mui/material'
 import moment from 'moment';
-
-
+import ErrorIcon from '@mui/icons-material/Error';
 
 const Tracker = ({ reload }) => {
   const [startDate, setStartDate] = useState([]);
@@ -81,13 +80,12 @@ const Tracker = ({ reload }) => {
   };
 
   useEffect(() => {
-    console.log(list);
   }, [list])
 
 
   const submit = () => {
     const l = list.filter((e) => {
-      if (moment(e.date) >= moment(startDate).subtract(1,'days') && moment(e.date) <= moment(endDate)) {
+      if (moment(e.date) >= moment(startDate).subtract(1, 'days') && moment(e.date) <= moment(endDate)) {
         return e;
       }
     })
@@ -135,7 +133,12 @@ const Tracker = ({ reload }) => {
 
       {!isLoading && listByDate?.map((item, index) => (
         <div key={index}>
-          <Typography variant="h6" sx={{ marginLeft: 10 }}>{moment(item.date).format('DD-MM-YYYY')}</Typography>
+          <Typography variant="h6" sx={{ marginLeft: 10, mt:10 }}>{moment(item.date).format('DD-MM-YYYY')}
+            {(item.totalCalories > calorieLimit) && <Tooltip title="Exceeded Calorie Limit for this day!">
+              <ErrorIcon size="large" sx={{ ml: 2 ,mt: 2  }} />
+            </Tooltip>}
+          </Typography>
+          <Typography variant="h7" sx={{ marginLeft: 10 }}>{item.totalCalories + " calories consumed"}</Typography>
           <Grid
             container
             direction="row"
