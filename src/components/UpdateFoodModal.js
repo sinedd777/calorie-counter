@@ -72,7 +72,7 @@ const UpdateFoodModal = ({item, reload}) => {
                     <FormControl>
                         <Stack spacing={2}>
                             <TextField required id="food-name" label="Food Name" variant="standard"  onChange={handleName} value={name}/>
-                            <TextField required id="calories" label="Calories" variant="standard" onChange={handleCalories} value={calories} type="number" />
+                            <TextField required id="calories" label="Calories" variant="standard" onChange={handleCalories} value={calories} InputProps={{ inputProps: { min: 1} }} type="number" />
                             <LocalizationProvider dateAdapter={ AdapterMoment }>
                                 <DesktopDatePicker
                                 required

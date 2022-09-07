@@ -27,8 +27,6 @@ const AdminStatsDetails = () => {
     const getAverageWeekly = async () => {
         const count = await getWeeklyConsumption();
         setweeklyConsumption(count);
-        console.log(moment().format("DD-MM-YYYY"));
-        console.log(moment().subtract(7, 'days').format("DD-MM-YYYY"));
     }
 
     useEffect(() => {

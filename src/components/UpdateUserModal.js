@@ -52,7 +52,7 @@ const UpdateUserModal = ( {reload, user} ) => {
                 <FormControl>
 
                     <Stack  spacing={3}>
-                        <TextField required id="calories" label="Calories" variant="standard" onChange={ (e) => setUpdatedCalories(e.target.value)} type="number" />
+                        <TextField required id="Calorie Limit" label="Calorie Limit" variant="standard" onChange={ (e) => setUpdatedCalories(e.target.value)} InputProps={{ inputProps: { min: 1} }} type="number" />
                         <Button onClick={ () => updateCalories(user.username, updatedCalories)} variant="contained" color="success"> Submit </Button>
                     </Stack>
                     </FormControl>

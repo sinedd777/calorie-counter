@@ -30,7 +30,7 @@ export default function ClippedDrawer() {
   const [screen, setScreen] = useState('Users');
   const [auth, setAuth] = useState(true);
 
-  const logout= () => {
+  const logout = () => {
     localStorage.clear();
     alert('Logging Out')
     navigate('/login')
@@ -42,8 +42,8 @@ export default function ClippedDrawer() {
   }
 
   useEffect(() => {
-    if(auth === true) return;
-    if(auth !== true) {
+    if (auth === true) return;
+    if (auth !== true) {
       alert('Not Authorised')
       logout()
     }
@@ -52,8 +52,8 @@ export default function ClippedDrawer() {
   useEffect(() => {
     checkAdmin();
   }, [])
-  
-  
+
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -90,14 +90,14 @@ export default function ClippedDrawer() {
           </List>
           <Divider />
           <List>
-              <ListItem disablePadding onClick={logout}>
-                <ListItemButton >
+            <ListItem disablePadding onClick={logout}>
+              <ListItemButton >
                 <ListItemIcon >
-                  <LogoutIcon/>
-                  </ListItemIcon>
-                  <ListItemText primary='Logout' />
-                </ListItemButton>
-              </ListItem>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary='Logout' />
+              </ListItemButton>
+            </ListItem>
           </List>
         </Box>
       </Drawer>
@@ -105,7 +105,7 @@ export default function ClippedDrawer() {
         <Toolbar />
         {screen === 'Users' && <AdminUserDetails />}
         {screen === 'Food Entries' && <AdminFoodDetails />}
-        {screen === 'Reports' && <AdminStatsDetails />}        
+        {screen === 'Reports' && <AdminStatsDetails />}
       </Box>
     </Box>
   );

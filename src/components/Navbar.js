@@ -38,6 +38,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const [name, setName] = useState();
   const [email, setEmail] = useState()
@@ -72,11 +73,24 @@ const Navbar = () => {
         name: name,
         email: email
       }
-    )
+    );
+    setOpen(true);
   }
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setOpen(false);
+};
+
 
   return (
     <AppBar position="static">
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert variant="filled" onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Entry Added!
+        </Alert>
+      </Snackbar>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ left: 10 }}>
           <LunchDiningIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

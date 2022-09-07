@@ -11,7 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import moment from 'moment';
 
 
-const Form = () => {
+const Form = ({ reload, setReload }) => {
     const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
     const [name, setName] = useState('')
     const [calories, setCalories] = useState('')
@@ -38,6 +38,7 @@ const Form = () => {
         addFood(name, calories, date);
         setOpen(true);
         resetValues();
+        setReload(!reload);
     }
 
     const handleClose = (event, reason) => {
@@ -61,7 +62,7 @@ const Form = () => {
             <FormControl>
                 <Stack spacing={2}>
                     <TextField required id="food-name" label="Food Name" variant="standard" onChange={handleName} value={name} />
-                    <TextField required id="calories" label="Calories" variant="standard" onChange={handleCalories} value={calories} type="number" />
+                    <TextField required id="calories" label="Calories" variant="standard" onChange={handleCalories} value={calories} InputProps={{ inputProps: { min: 1 } }} type="number" />
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DesktopDatePicker
                             required
