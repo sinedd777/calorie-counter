@@ -19,6 +19,8 @@ const Tracker = ({ reload }) => {
   const [list, setList] = useState([]);
   const [calorieLimit, setCalorieLimit] = useState(0)
 
+  const [filtered, setFiltered] = useState([])
+
   const calculateCalories = (list) => {
     list.forEach((item) => {
       let calories = 0;
@@ -58,6 +60,7 @@ const Tracker = ({ reload }) => {
       const list = await getAllItems();
       formatList(list);
       setList([...list]);
+      setFiltered([...list])
     }
     const fetchCalorieLimit = async () => {
       const calorieLimit = await getCalorieLimit();
@@ -78,17 +81,18 @@ const Tracker = ({ reload }) => {
   };
 
   useEffect(() => {
+    console.log(list);
   }, [list])
 
 
   const submit = () => {
     const l = list.filter((e) => {
-      if (moment(e.date) >= moment(startDate) && moment(e.date) <= moment(endDate)) {
+      if (moment(e.date) >= moment(startDate).subtract(1,'days') && moment(e.date) <= moment(endDate)) {
         return e;
       }
     })
     formatList(l);
-    setList(l);
+    setFiltered(l);
   }
 
   const buttonActive = () => {
@@ -112,6 +116,7 @@ const Tracker = ({ reload }) => {
               inputFormat="DD/MM/YYYY"
               value={startDate}
               onChange={handleStartDate}
+              disableFuture
               renderInput={(params) => <TextField {...params} />}
             />
             <DesktopDatePicker

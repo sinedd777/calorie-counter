@@ -115,7 +115,7 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} />
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Open options">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar />
               </IconButton>

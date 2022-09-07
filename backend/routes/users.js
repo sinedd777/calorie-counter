@@ -3,7 +3,7 @@ let User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
 
-router.route('/authorised').get( async (req, res) => {
+router.route('/authorised').get(async (req, res) => {
 	try {
 		const token = req.headers['x-access-token']
 		const username = jwt.verify(token, 'secret123')
@@ -12,9 +12,9 @@ router.route('/authorised').get( async (req, res) => {
 			username: username,
 		})
 
-		if(user.role !== 'admin'){
+		if (user.role !== 'admin') {
 			res.json({ status: 'error', error: 'Not Admin' })
-		}else{
+		} else {
 			res.json(true)
 		}
 	}
@@ -23,8 +23,8 @@ router.route('/authorised').get( async (req, res) => {
 	}
 })
 
-router.route('/').get( async (req, res) => {
-	
+router.route('/').get(async (req, res) => {
+
 	try {
 		const token = req.headers['x-access-token']
 		const username = jwt.verify(token, 'secret123')
@@ -33,12 +33,12 @@ router.route('/').get( async (req, res) => {
 			username: username,
 		})
 
-		if(user.role !== 'admin'){
+		if (user.role !== 'admin') {
 			res.json({ status: 'error', error: 'Not Admin' })
-		}else{
-			User.find({}, { username:1, calorieLimit:1, role: 1})
-			.then(users => res.json(users))
-			.catch(err => res.status(400).json('Error: ' + err));
+		} else {
+			User.find({}, { username: 1, calorieLimit: 1, role: 1 })
+				.then(users => res.json(users))
+				.catch(err => res.status(400).json('Error: ' + err));
 		}
 	}
 	catch (err) {
@@ -46,14 +46,11 @@ router.route('/').get( async (req, res) => {
 	}
 })
 
-router.route('/login').post( async (req, res) => {
-  const user = await User.findOne({
+router.route('/login').post(async (req, res) => {
+	const user = await User.findOne({
 		username: req.body.username,
 	})
-	console.log(user);
 	if (!user) {
-		console.log(user,'hello');
-
 		return res.json({ status: 'error', error: 'Invalid login' })
 	}
 	const isPasswordValid = await bcrypt.compare(
@@ -62,7 +59,7 @@ router.route('/login').post( async (req, res) => {
 	)
 
 	if (isPasswordValid) {
-		const token = jwt.sign( user.username, 'secret123')
+		const token = jwt.sign(user.username, 'secret123')
 
 		return res.json({ status: 'ok', user: token, role: user.role })
 	} else {
@@ -73,13 +70,13 @@ router.route('/login').post( async (req, res) => {
 router.route('/limit').get((req, res) => {
 	const token = req.headers['x-access-token']
 	const username = jwt.verify(token, 'secret123')
-  
+
 	User.findOne({ username: username })
 		.then(user => res.json(user.calorieLimit))
 		.catch(err => res.status(400).json('Error: ' + err));
-  });
+});
 
-router.route('/register').post( async (req, res) => {
+router.route('/register').post(async (req, res) => {
 	try {
 		const newPassword = await bcrypt.hash(req.body.password, 10)
 		await User.create({
@@ -94,7 +91,7 @@ router.route('/register').post( async (req, res) => {
 	}
 })
 
-router.route('/delete').post( async (req, res) => {
+router.route('/delete').post(async (req, res) => {
 	try {
 		const token = req.headers['x-access-token']
 		const username = jwt.verify(token, 'secret123')
@@ -104,12 +101,12 @@ router.route('/delete').post( async (req, res) => {
 			username: username,
 		})
 
-		if(user.role !== 'admin'){
+		if (user.role !== 'admin') {
 			res.json({ status: 'error', error: 'Not Admin' })
-		}else{
+		} else {
 			User.deleteOne({ username: targetUsername })
-			.then(users => res.json('User Removed!'))
-			.catch(err => res.status(400).json('Error: ' + err));
+				.then(users => res.json('User Removed!'))
+				.catch(err => res.status(400).json('Error: ' + err));
 		}
 	}
 	catch (err) {
@@ -117,7 +114,7 @@ router.route('/delete').post( async (req, res) => {
 	}
 })
 
-router.route('/update').post( async (req, res) => {
+router.route('/update').post(async (req, res) => {
 	try {
 		const token = req.headers['x-access-token']
 		const username = jwt.verify(token, 'secret123')
@@ -128,12 +125,12 @@ router.route('/update').post( async (req, res) => {
 			username: username,
 		})
 
-		if(user.role !== 'admin'){
+		if (user.role !== 'admin') {
 			res.json({ status: 'error', error: 'Not Admin' })
-		}else{
-			User.updateOne({ username: targetUsername}, { $set : { calorieLimit: calorieLimit }})
-			.then(() => res.json('User Updated'))
-			.catch(err => res.status(400).json('Error: ' + err));
+		} else {
+			User.updateOne({ username: targetUsername }, { $set: { calorieLimit: calorieLimit } })
+				.then(() => res.json('User Updated'))
+				.catch(err => res.status(400).json('Error: ' + err));
 		}
 	}
 	catch (err) {
