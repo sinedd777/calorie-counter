@@ -26,6 +26,7 @@ const Form = ({ reload, setReload }) => {
 
     const handleCalories = (newValue) => {
         setCalories(newValue.target.value);
+        console.log();
     };
 
     const resetValues = () => {
@@ -74,7 +75,7 @@ const Form = ({ reload, setReload }) => {
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </LocalizationProvider>
-                    <Button variant={!(date && name && calories) ? 'outlined' : 'contained'} disabled={!(date && name && calories)} onClick={submit}>Add</Button>
+                    <Button variant={!(date && name && calories) ? 'outlined' : 'contained'} disabled={!(date && name && (calories > 0)) } onClick={submit}>Add</Button>
                 </Stack>
             </FormControl>
         </Box>

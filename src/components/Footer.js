@@ -16,7 +16,7 @@ const Footer = () => {
           Calorie Tracker
         </Typography>
         <Typography variant='h6' pb='40px' mt='20px'>
-          Made with ❤
+          Made with ❤ by Toptal
         </Typography>
       </Stack>
     </Box>
