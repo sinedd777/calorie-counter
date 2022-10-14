@@ -78,10 +78,10 @@ const Navbar = () => {
   }
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-        return;
+      return;
     }
     setOpen(false);
-};
+  };
 
 
   return (

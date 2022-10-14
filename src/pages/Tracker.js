@@ -89,6 +89,7 @@ const Tracker = ({ reload }) => {
         return e;
       }
     })
+    console.log(l);
     formatList(l);
     setFiltered(l);
   }

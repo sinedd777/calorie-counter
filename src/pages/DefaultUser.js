@@ -4,7 +4,6 @@ import { Box } from '@mui/material'
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import Home from './Home';
-import Tracker from './Tracker';
 
 const DefaultUser = () => {
   return (
